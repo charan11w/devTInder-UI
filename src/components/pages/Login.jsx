@@ -1,9 +1,90 @@
-import React from 'react'
+import axios from "axios";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "../store/AuthSlice";
+import { BASE_URL } from "../utils/Constants";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  return (
-    <div>Login</div>
-  )
-}
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [userDetails, setUserDetails] = useState({
+    emailId: "shiva@gmail.com",
+    password: "Shiva@123",
+  });
 
-export default Login
+  const saveUserDetails = (event) => {
+    const { name, value } = event.target;
+
+    setUserDetails((pre) => ({
+      ...userDetails,
+      [name]: value,
+    }));
+  };
+
+  const loginUser = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(
+        BASE_URL + "/login",
+        {
+          emailId,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response.data.data);
+      dispatch(login(response.data));
+      navigate("/");
+    } catch (error) {
+      console.error("Login error:", error.message);
+    }
+
+    return;
+  };
+
+  const { emailId, password } = userDetails;
+  return (
+    <div className="flex justify-center my-15">
+      <div className="card bg-base-300 w-96 shadow-sm">
+        <div className="card-body">
+          <h2 className="card-title justify-center">Login</h2>
+          {/* wrap in form */}
+          <form onSubmit={loginUser}>
+            <fieldset className="fieldset my-2">
+              <legend className="fieldset-legend">Email Id</legend>
+              <input
+                type="text"
+                className="input"
+                placeholder="Enter Your email"
+                value={emailId}
+                name="emailId"
+                onChange={saveUserDetails}
+              />
+            </fieldset>
+            <fieldset className="fieldset my-2">
+              <legend className="fieldset-legend">Password</legend>
+              <input
+                type="password"
+                className="input"
+                placeholder="Enter Your password"
+                value={password}
+                name="password"
+                onChange={saveUserDetails}
+              />
+            </fieldset>
+            <div className="card-actions justify-center mt-4">
+              <button type="submit" className="btn btn-primary">
+                Login
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
