@@ -8,10 +8,13 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [error, setError] = useState();
   const [userDetails, setUserDetails] = useState({
     emailId: "shiva@gmail.com",
     password: "Shiva@123",
   });
+
+  const { emailId, password } = userDetails;
 
   const saveUserDetails = (event) => {
     const { name, value } = event.target;
@@ -35,17 +38,16 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      console.log(response.data.data);
       dispatch(login(response.data));
       navigate("/");
     } catch (error) {
-      console.error("Login error:", error.message);
+      setError((pre) => error.response.data.error);
+      console.error("Login error:", error);
     }
 
     return;
   };
 
-  const { emailId, password } = userDetails;
   return (
     <div className="flex justify-center my-15">
       <div className="card bg-base-300 w-96 shadow-sm">
@@ -75,6 +77,7 @@ const Login = () => {
                 onChange={saveUserDetails}
               />
             </fieldset>
+            <p className="text-red-500">{error}</p>
             <div className="card-actions justify-center mt-4">
               <button type="submit" className="btn btn-primary">
                 Login

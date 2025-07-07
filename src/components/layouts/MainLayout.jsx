@@ -10,14 +10,16 @@ import { login } from "../store/AuthSlice";
 const MainLayout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true); // add loading state
+  const [loading, setLoading] = useState(true);
 
   const fetchUser = async () => {
     try {
       const res = await axios.get(BASE_URL + "/profile/view", {
         withCredentials: true,
       });
-      dispatch(login(res.data));
+      const { data } = res;
+      console.log(data);
+      dispatch(login(data));
       setLoading(false);
     } catch (err) {
       setLoading(false);
