@@ -18,7 +18,6 @@ const MainLayout = () => {
         withCredentials: true,
       });
       const { data } = res;
-      console.log(data);
       dispatch(login(data));
       setLoading(false);
     } catch (err) {
@@ -36,13 +35,16 @@ const MainLayout = () => {
       <div style={{ textAlign: "center", marginTop: "2rem" }}>Loading...</div>
     );
   }
-
   return (
-    <>
-      <NavBar />
-      <Outlet />
+    <div className="min-h-screen flex flex-col">
+      <nav className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
+        <NavBar />
+      </nav>
+      <main className="flex-grow pt-16 ">
+        <Outlet />
+      </main>
       <Footer />
-    </>
+    </div>
   );
 };
 
