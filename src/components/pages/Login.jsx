@@ -9,10 +9,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [error, setError] = useState();
-  const [userDetails, setUserDetails] = useState({
-    emailId: "shiva@gmail.com",
-    password: "Shiva@123",
-  });
+  const [userDetails, setUserDetails] = useState({});
 
   const { emailId, password } = userDetails;
 
@@ -38,7 +35,8 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      dispatch(login(response.data));
+      console.log(response.data.data);
+      dispatch(login(response.data.data));
       navigate("/");
     } catch (error) {
       setError((pre) => error.response.data.error);
