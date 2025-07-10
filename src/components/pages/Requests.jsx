@@ -103,7 +103,12 @@ const Requests = () => {
                       type="button"
                       className="btn btn-secondary"
                       onClick={() =>
-                        reviewRequest("Rejected Request !!", "success")
+                        reviewRequest(
+                          "Rejected Request !!",
+                          "success",
+                          "rejected",
+                          user._id
+                        )
                       }
                     >
                       Reject
