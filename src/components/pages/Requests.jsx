@@ -61,8 +61,6 @@ const Requests = () => {
         <div className="flex flex-col justify-center items-center w-full">
           {requests.length > 0 &&
             requests.map((user, index) => {
-              console.log(user);
-              console.log(user._id);
               const { firstName, lastName, age, gender, photoURL, about } =
                 user.fromUserId;
               return (
