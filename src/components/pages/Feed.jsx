@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import UserCard from "./UserCard";
 import { BASE_URL } from "../utils/Constants";
 import axios from "axios";
@@ -10,6 +10,8 @@ const Feed = () => {
   const dispatch = useDispatch();
 
   const feed = useSelector((state) => state.feed);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const fetchFeed = async () => {
     if (feed) return;
@@ -20,6 +22,9 @@ const Feed = () => {
       dispatch(addToFeed(res.data.data));
     } catch (err) {
       console.error(err.message);
+      setError("Server is starting... please wait ⏳");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,6 +41,16 @@ const Feed = () => {
 
   return (
     <div className="flex justify-center my-14">
+      {loading && (
+        <div className="flex justify-center my-14 text-white-300 text-2xl">
+          waking up the server please wait
+        </div>
+      )}
+      {error && (
+        <div className="flex justify-center my-14 text-white-300 text-2xl">
+          Error in the Backend
+        </div>
+      )}
       {feed && <UserCard user={feed[0]} />}
     </div>
   );
