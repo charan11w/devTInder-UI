@@ -21,12 +21,11 @@ const UserCard = ({ user }) => {
 
   if (!user)
     return (
-      <div className="test-center text-white-300 text-2xl">
-        No new Users Found
+      <div className="flex justify-center my-14 text-white-300 text-2xl">
+        No New User Found
       </div>
     );
   const { firstName, lastName, gender, age, about, photoURL, _id } = user;
-  console.log(_id);
   return (
     <div className="card bg-base-300 w-96 shadow-sm h-full">
       <figure className="w-[384px] h-[371px] overflow-hidden">

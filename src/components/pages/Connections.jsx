@@ -12,7 +12,6 @@ const Connections = () => {
       const res = await axios.get(BASE_URL + "/user/connections", {
         withCredentials: true,
       });
-      console.log(res.data.data);
       dispatch(addConnections(res.data.data));
     } catch (err) {}
   };
@@ -21,7 +20,12 @@ const Connections = () => {
     fetchConnections();
   }, []);
 
-  if (!connections) return <>error</>;
+  if (!connections)
+    return (
+      <div className="flex justify-center my-14 text-white-300 text-2xl">
+        Loading...
+      </div>
+    );
 
   if (connections.length === 0)
     return (
