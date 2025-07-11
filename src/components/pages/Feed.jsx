@@ -32,13 +32,6 @@ const Feed = () => {
     fetchFeed();
   }, []);
 
-  if (!feed)
-    return (
-      <div className="flex justify-center my-14 text-white-300 text-2xl">
-        Error in the Backend Please close and reopen
-      </div>
-    );
-
   return (
     <div className="flex justify-center my-14">
       {loading && (
