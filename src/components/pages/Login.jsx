@@ -11,7 +11,14 @@ const Login = () => {
   const [error, setError] = useState();
   const [userDetails, setUserDetails] = useState({});
 
-  const { emailId, password } = userDetails;
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const {
+    emailId = "",
+    password = "",
+    firstName = "",
+    lastName = "",
+  } = userDetails;
 
   const saveUserDetails = (event) => {
     const { name, value } = event.target;
@@ -35,7 +42,6 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      console.log(response.data.data);
       dispatch(login(response.data.data));
       navigate("/");
     } catch (error) {
@@ -46,13 +52,64 @@ const Login = () => {
     return;
   };
 
+  const signUpUser = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(
+        BASE_URL + "/signup",
+        {
+          firstName,
+          lastName,
+          emailId,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(login(response.data.user));
+      navigate("/profile");
+    } catch (error) {
+      setError((pre) => error.response.data.error);
+      console.error("Login error:", error);
+    }
+  };
+
   return (
     <div className="flex justify-center my-15">
       <div className="card bg-base-300 w-96 shadow-sm">
         <div className="card-body">
-          <h2 className="card-title justify-center">Login</h2>
+          <h2 className="card-title justify-center">
+            {isLoggedIn ? "Login" : "Sign up"}
+          </h2>
           {/* wrap in form */}
-          <form onSubmit={loginUser}>
+          <form onSubmit={isLoggedIn ? loginUser : signUpUser}>
+            {!isLoggedIn && (
+              <>
+                <fieldset className="fieldset my-2">
+                  <legend className="fieldset-legend">First Name</legend>
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="Enter Your First Name"
+                    value={firstName}
+                    name="firstName"
+                    onChange={saveUserDetails}
+                  />
+                </fieldset>
+                <fieldset className="fieldset my-2">
+                  <legend className="fieldset-legend">Last Name</legend>
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="Enter Your Last Name"
+                    value={lastName}
+                    name="lastName"
+                    onChange={saveUserDetails}
+                  />
+                </fieldset>
+              </>
+            )}
             <fieldset className="fieldset my-2">
               <legend className="fieldset-legend">Email Id</legend>
               <input
@@ -78,10 +135,33 @@ const Login = () => {
             <p className="text-red-500">{error}</p>
             <div className="card-actions justify-center mt-4">
               <button type="submit" className="btn btn-primary">
-                Login
+                {isLoggedIn ? "Login" : "Sign up"}
               </button>
             </div>
           </form>
+          <p className="text-center mt-2">
+            {isLoggedIn ? (
+              <>
+                New User?,{" "}
+                <span
+                  onClick={() => setIsLoggedIn(false)}
+                  className="text-blue-500 cursor-pointer hover:underline"
+                >
+                  Signup Here
+                </span>
+              </>
+            ) : (
+              <>
+                Existing User?,{" "}
+                <span
+                  onClick={() => setIsLoggedIn(true)}
+                  className="text-blue-500 cursor-pointer hover:underline"
+                >
+                  Login Here
+                </span>
+              </>
+            )}
+          </p>
         </div>
       </div>
     </div>

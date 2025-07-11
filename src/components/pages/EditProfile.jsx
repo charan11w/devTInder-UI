@@ -7,8 +7,8 @@ import { login } from "../store/AuthSlice";
 
 const EditProfile = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state);
-  const [userDetails, setUserDetails] = useState(user || {});
+  const user = useSelector((state) => state.user);
+  const [userDetails, setUserDetails] = useState(user);
   const [toast, setToast] = useState(false);
   const [error, setError] = useState();
 
@@ -16,7 +16,8 @@ const EditProfile = () => {
     setUserDetails(user);
   }, []);
 
-  const { firstName, lastName, photoURL, age, gender, about } = userDetails;
+  const { firstName, lastName, photoURL, age, gender, about } =
+    userDetails || {};
 
   const inputDetails = [
     {
@@ -41,7 +42,6 @@ const EditProfile = () => {
 
   const saveProfile = async (e) => {
     e.preventDefault();
-    console.log(gender);
     try {
       const res = await axios.patch(
         BASE_URL + "/profile/edit",
@@ -65,7 +65,6 @@ const EditProfile = () => {
         setToast(false);
       }, 3000);
     } catch (err) {
-      console.log(err);
       setError(err.response.data.error);
     }
   };
@@ -77,7 +76,7 @@ const EditProfile = () => {
     }));
   };
 
-  if (!user) {
+  if (!userDetails) {
     return <div>loading...</div>;
   }
 

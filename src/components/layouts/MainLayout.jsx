@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import NavBar from "../NavBar/NavBar";
 import { Outlet, useNavigate } from "react-router-dom";
 import Footer from "../Footer/Footer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../utils/Constants";
 import axios from "axios";
 import { login } from "../store/AuthSlice";
@@ -10,7 +10,8 @@ import { login } from "../store/AuthSlice";
 const MainLayout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+
+  const user = useSelector((store) => store.user);
 
   const fetchUser = async () => {
     try {
@@ -18,23 +19,19 @@ const MainLayout = () => {
         withCredentials: true,
       });
       const { data } = res;
-      dispatch(login(data));
-      setLoading(false);
+      dispatch(login(data.data));
+      navigate("/profile");
     } catch (err) {
-      setLoading(false);
       navigate("/login");
+      console.error(err.message);
     }
   };
 
   useEffect(() => {
-    fetchUser();
+    if (!user) {
+      fetchUser();
+    }
   }, []);
-
-  if (loading) {
-    return (
-      <div style={{ textAlign: "center", marginTop: "2rem" }}>Loading...</div>
-    );
-  }
   return (
     <div className="min-h-screen flex flex-col">
       <nav className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
